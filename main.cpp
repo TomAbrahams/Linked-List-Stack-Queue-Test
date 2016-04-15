@@ -1,7 +1,8 @@
+#pragma once
 #include<iostream>
 
 #include "LLStack.h"
-//#include "LLQueue.h"
+#include "LLQueue.h"
 
 
 using namespace std;
@@ -31,7 +32,7 @@ int main()
 	cout << endl << "Wait" << endl;
 
 	//List 2 = {1, 0, 0 | ,0 ,0, 0, | 1, 1 ,1 | 1 ,1, 0}
-	LLStack list2;
+	LLQueue list2;
 	list2.insertLast(1);
 	list2.insertLast(0);
 	list2.insertLast(0);
