@@ -4,115 +4,120 @@ This is only one possible solution.
 */
 #include "LLStack.h"
 
-LLStack::LLStack()
-{
-
-}
-LLStack::~LLStack()
-{
-
-}
-
 int LLStack::top() const
 {
-	return first->getData();
+	if (numberOfElements == 0)
+		cerr << "Stack is empty.";
+	else
+		return first->getData();
 }
-
 void LLStack::pop()
 {
-	if (numberOfElements != 0)
-	{
-		//Make current equal to first
-		Node*current = first;
-		//Shift first
-		first = first->getNextLink();
-		//delete current
-		first->setPrevLink(NULL);
-		--numberOfElements;
-	}
+	if (numberOfElements == 0)
+		cerr << "Stack is empty.";
 	else
-		cerr << "There are no elements that exist" << endl;
-
-
-
+	{
+		Node *temp = first;
+		first = first->getNextLink();
+		delete temp;
+		numberOfElements--;
+	}
 }
-
 void LLStack::push(int theData)
 {
+	
+	//num 0
 	if (numberOfElements == 0)
 	{
-		first = new Node(theData, NULL, NULL);
-		last = NULL;
-		++numberOfElements;
+		Node *theNode = new Node(theData, NULL, NULL);
+		first = theNode;
+		last = theNode;
+		numberOfElements++;
 	}
+	//num 1
 	else if (numberOfElements == 1)
 	{
-		last = first;
-		first = new Node(theData, NULL, last);
-		last->setPrevLink(first);
-		++numberOfElements;
+		
+		first->setPrevLink(new Node(theData, NULL, last));
+		first = first->getPrevLink();
+		numberOfElements++;
 	}
+	//num > 1
 	else
 	{
-		Node*current = first;
-		current = first;
-		first = new Node(theData, NULL, current);
-		current->setPrevLink(first);
-		++numberOfElements;
+		Node *current = first;
+		current->setPrevLink(new Node(theData, NULL, first));
+		first = current->getPrevLink();
+		numberOfElements++;
 	}
-}
 
-void LLStack::print() const
-{
-	Node*current = first;
-	while (current != NULL)
-	{
-		cout << current->getData() << " ";
-		current = current->getNextLink();
-	}
 }
-
 void LLStack::convert()
 {
-	//Create a place holder pointer
-	Node* placeholder = last;
-	//Have a counter
-	int counter = numberOfElements;
-	//Have a last choice
-	int sum = 0;
-	//Check 3 items as long as the pointers don't overlap.
-	while (counter >= 3)
+	int* arrHold = new int[numberOfElements];
+	int arrCounter = 0;
+	if (numberOfElements == 0)
+		cerr << "The Stack is empty.";
+	else
 	{
-		for (int i = 0; i < 3; i++)
+		//check 3 elements
+		int tracker = numberOfElements;		int sum = 0;
+		
+		while (tracker >= 3)
 		{
-			sum += top();
-			//Pop 3 elements.
+			for (int i = 0; i < 3; i++)
+			{
+				sum += top();
+				pop();
+				--tracker;
+			}
+			if (sum == 0)
+			{
+				arrHold[arrCounter] = 0;
+				arrCounter++;
+				/*
+				last->setNextLink(new Node(0, last, NULL));
+				last = last->getNextLink();
+				numberOfElements++;
+				*/
+			}
+			else if (sum == 3)
+			{
+				arrHold[arrCounter] = 1;
+				arrCounter++;
+				/*
+				last->setNextLink(new Node(1, last, NULL));
+				last = last->getNextLink();
+				numberOfElements++;
+				*/
+			}
+			sum = 0;
+		}
+		while (tracker != 0)
+		{
 			pop();
-			--counter;
+			tracker--;
 		}
-		//Are the values the same then add that value after the end either 3 or 0
-		if (sum == 3)
-		{
-			Node* current = last;
-			last = new Node(1, current, NULL);
-			current->setNextLink(last);
-			++numberOfElements;
-			
-		}
-		else if (sum == 0)
-		{
-			Node* current = last;
-			last = new Node(0, current, NULL);
-			current->setNextLink(last);
-			++numberOfElements;
-		}
-		//Reset Sum
-		sum = 0;
+		for (int i = 0; i < arrCounter; i++)
+			push(arrHold[i]);
+		delete [] arrHold;
 	}
-	//Clean up loose ends.
-	while (counter != 0)
+	
+	//pop everything
+	//push
+}
+void LLStack::print()const
+{
+	if (numberOfElements == 0)
+		cerr <<  "The stack is empty.";
+	else
 	{
-		pop();
-		--counter;
+		Node *current = first;
+		while (current != NULL)
+		{
+			cout << current->getData() << " ";
+			current = current->getNextLink();
+		}
 	}
+	
 }
